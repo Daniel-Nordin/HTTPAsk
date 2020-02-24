@@ -20,17 +20,25 @@ public class HTTPAsk {
 
 
                 String url = input.readLine();
-                String[] params = url.split("? &/");
+                String[] params = url.split("[? &=/]");
+                StringBuilder sb = new StringBuilder();
 
-                System.out.println(params);
+                if(params[2].equals("ask") && params[3].equals("hostname") && params[5].equals("port")){
+                    sb.append("HTTP/1.1 200 OK\r\n\r\n");
+                    if(params.length == 9) {
+                        sb.append(TCPClient.askServer(params[4], Integer.parseInt(params[6])));
+                    }
+                    else {
+                        sb.append(TCPClient.askServer(params[4], Integer.parseInt(params[6]), params[7]));
+                    }
+                }
 
-                StringBuilder sb = new StringBuilder("HTTP/1.1 200 OK\r\n\r\n");
-                //output.writeBytes(sb.toString());
 
                 System.out.println(connectionSocket.isConnected());
 
                 System.out.println("klar");
                 System.out.println(sb.toString());
+                output.writeBytes(sb.toString());
 
                 connectionSocket.close();
                 output.close();
