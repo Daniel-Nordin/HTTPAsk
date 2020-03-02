@@ -2,7 +2,7 @@ import java.net.*;
 import java.io.*;
 
 public class HTTPAsk {
-    public static void main( String[] args) throws IOException {
+    public static void main(String[] args) throws IOException {
         // Your code here
         int port = Integer.parseInt(args[0]);
 
@@ -18,19 +18,34 @@ public class HTTPAsk {
                 DataOutputStream output = new DataOutputStream(connectionSocket.getOutputStream());
 
 
-
                 String url = input.readLine();
                 String[] params = url.split("[? &=/]");
                 StringBuilder sb = new StringBuilder();
 
-                if(params[2].equals("ask") && params[3].equals("hostname") && params[5].equals("port")){
-                    sb.append("HTTP/1.1 200 OK\r\n\r\n");
-                    if(params.length == 9) {
-                        sb.append(TCPClient.askServer(params[4], Integer.parseInt(params[6])));
+                try {
+                    if (params[0].equals("GET")) {
+                        if (params[2].equals("ask") && params[3].equals("hostname") && params[5].equals("port")) {
+                            if (params.length == 9) {
+                                sb.append("HTTP/1.1 200 OK\r\n\r\n");
+                                sb.append(TCPClient.askServer(params[4], Integer.parseInt(params[6])));
+                            } else if (params.length == 11 && params[7] == "string") {
+                                sb.append("HTTP/1.1 200 OK\r\n\r\n");
+                                sb.append(TCPClient.askServer(params[4], Integer.parseInt(params[6]), params[8]));
+                            }
+                            else {
+                                sb.append("HTTP/1.1 404 Not Found");
+                            }
+                        } else {
+                            sb.append("HTTP/1.1 404 Not Found\r\n");
+                        }
                     }
-                    else {
-                        sb.append(TCPClient.askServer(params[4], Integer.parseInt(params[6]), params[7]));
-                    }
+
+                        else {
+                            sb.append("HTTP/1.1 400 Bad Request\r\n");
+                        }
+                }catch (Exception ex){
+                    sb = new StringBuilder();
+                    sb.append("HTTP/1.1 404 Not Found\r\n");
                 }
 
 

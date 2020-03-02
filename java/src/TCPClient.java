@@ -22,10 +22,9 @@ public class TCPClient {
             while (byteLength != -1 && socket.isConnected()) {
                 try {
                     byteLength = input.read(buffer);
-                    if(byteLength != -1)
+                    if (byteLength != -1)
                         sb.append(decode(buffer, byteLength));
-                }
-                catch (Exception ex){
+                } catch (Exception ex) {
                     byteLength = -1;
                 }
             }
@@ -48,10 +47,10 @@ public class TCPClient {
         while (byteLength != -1 && socket.isConnected()) {
             try {
                 byteLength = input.read(buffer);
-                if(byteLength != -1)
+                if (byteLength != -1)
                     sb.append(decode(buffer, byteLength));
 
-            }catch (Exception ex){
+            } catch (Exception ex) {
                 byteLength = -1;
             }
         }
